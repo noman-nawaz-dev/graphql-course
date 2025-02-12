@@ -1,0 +1,35 @@
+{
+   "name": "server",
+   "version": "1.0.0",
+   "description": "",
+   "main": "dist/app.js",
+   "scripts": {
+      "start": "set NODE_ENV=PRODUCTION & node --experimental-specifier-resolution=node dist/app.js",
+      "build": "tsc -p .",
+      "dev": "tsx watch src/app.ts",
+      "clean": "rimraf dist node_modules"
+   },
+   "keywords": [],
+   "author": "",
+   "type": "module",
+   "license": "ISC",
+   "dependencies": {
+      "@apollo/server": "^4.11.3",
+      "cors": "2.8.5",
+      "dotenv": "16.4.7",
+      "express": "4.21.2",
+      "graphql": "^16.10.0",
+      "helmet": "8.0.0",
+      "mongoose": "^8.10.0",
+      "morgan": "1.10.0"
+   },
+   "devDependencies": {
+      "@types/cors": "2.8.17",
+      "@types/express": "4.17.21",
+      "@types/helmet": "4.0.0",
+      "@types/morgan": "1.9.9",
+      "@types/node": "22.13.1",
+      "tsx": "4.19.2",
+      "typescript": "5.7.3"
+   }
+}
