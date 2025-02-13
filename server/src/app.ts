@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import { DatabaseManager } from "./database/DatabaseManager";
-import { connectGraphQL } from "./graphql/graphql";
+import { connectGraphQL, graphQLContext } from "./graphql/graphql";
 import { expressMiddleware } from "@apollo/server/express4";
 import express from "express";
-
+import cors from "cors";
 dotenv.config({ path: ".env" });
 
 export const envMode = process.env.NODE_ENV?.trim() || "DEVELOPMENT";
@@ -18,7 +18,13 @@ await graphQLServer.start();
 const app = express();
 
 app.use(express.json());
-app.use("/graphql", expressMiddleware(graphQLServer));
+app.use(cors());
+app.use(
+  "/graphql",
+  expressMiddleware(graphQLServer, {
+    context: graphQLContext,
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("Hello World");

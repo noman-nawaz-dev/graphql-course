@@ -1,9 +1,9 @@
-import { PostService } from "../../services/post.service";
-import { UserService } from "../../services/user.service";
-import { CommentService } from "../../services/comment.service";
+import { PostService } from "../../../services/post.service";
+import { UserService } from "../../../services/user.service";
+import { CommentService } from "../../../services/comment.service";
 
 export class PostQueryResolver {
-  static async getAllPosts() {
+  static async getAllPosts(_: any, __: any, { user }: { user: any }) {
     return PostService.getAllPosts();
   }
 
