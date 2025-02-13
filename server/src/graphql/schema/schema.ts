@@ -74,9 +74,15 @@ export const graphQLSchema = `
     getUser(id: ID!): User
     getAllPosts: [Post]
     getPost(id: ID!): Post
+    getCommentsByPostId(postId: ID!): [Comment]
+    getUserToken(email: String!, password: String!): String!
   }
 
   type Mutation {
     createComment(post: ID!, user: ID!, description: String!): Boolean!
+    updateUser(id: ID!, firstName: String, lastName: String,
+      email: String,
+      bio: String,
+    ): Boolean!
   }
 `;

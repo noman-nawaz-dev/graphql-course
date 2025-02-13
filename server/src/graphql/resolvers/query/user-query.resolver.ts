@@ -1,5 +1,7 @@
-import { UserService } from "../../services/user.service";
-import { PostService } from "../../services/post.service";
+import { UserService } from "../../../services/user.service";
+import { PostService } from "../../../services/post.service";
+import { getUserToken } from "../../../auth/auth";
+
 export class UserQueryResolver {
   static async getAllUsers() {
     return UserService.getAllUsers();
@@ -23,5 +25,12 @@ export class UserQueryResolver {
 
   static async posts(parent: any) {
     return PostService.getPostsByUserId(parent._id);
+  }
+
+  static async getUserToken(
+    _: any,
+    { email, password }: { email: string; password: string }
+  ) {
+    return getUserToken(email, password);
   }
 }

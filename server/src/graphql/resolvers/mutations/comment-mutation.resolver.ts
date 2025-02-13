@@ -1,4 +1,4 @@
-import { CommentService } from "../../services/comment.service";
+import { CommentService } from "../../../services/comment.service";
 
 interface CommentInput {
   post: string;

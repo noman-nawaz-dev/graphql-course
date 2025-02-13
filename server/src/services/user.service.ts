@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { BaseService } from "./BaseService";
+import jwt from "jsonwebtoken";
+import { JwtPayload } from "jsonwebtoken";
 
 export class UserService extends BaseService {
   static async getAllUsers() {
@@ -11,7 +13,7 @@ export class UserService extends BaseService {
   }
 
   static async getUserById(id: string) {
-    return this.db
+    return await this.db
       ?.collection("users")
       .findOne({ _id: new mongoose.Types.ObjectId(id) });
   }
@@ -24,5 +26,27 @@ export class UserService extends BaseService {
       ?.collection("users")
       .find({ _id: { $in: objectIds } })
       .toArray();
+  }
+
+  static async updateUser(
+    id: string,
+    firstName: string,
+    lastName: string,
+    email: string,
+    bio: string
+  ) {
+    const result = await this.db
+      ?.collection("users")
+      .updateOne(
+        { _id: new mongoose.Types.ObjectId(id) },
+        { $set: { firstName, lastName, email, bio } }
+      );
+    return result?.modifiedCount === 1;
+  }
+
+  static async getUserByToken(token: string) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    if (!decoded.userId) throw new Error("Invalid token");
+    return this.getUserById(decoded.userId);
   }
 }
