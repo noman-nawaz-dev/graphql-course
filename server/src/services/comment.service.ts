@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { BaseService } from "./BaseService";
 import { UserService } from "./user.service";
+import { CreateCommentInput } from "../graphql/generated/types";
 
 export class CommentService extends BaseService {
   static async getCommentsByPostId(postId: string) {
@@ -10,12 +11,12 @@ export class CommentService extends BaseService {
       .toArray();
   }
 
-  static async createComment(post: string, user: string, description: string) {
+  static async createComment(input: CreateCommentInput): Promise<boolean> {
     try {
       const result = await this.db?.collection("comments").insertOne({
-        post: new mongoose.Types.ObjectId(post),
-        user: await UserService.getUserById(user),
-        description,
+        post: new mongoose.Types.ObjectId(input.post),
+        user: await UserService.getUserById(input.user),
+        description: input.description,
         createdAt: new Date(),
         updatedAt: new Date(),
       });

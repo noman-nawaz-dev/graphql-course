@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { BaseService } from "./BaseService";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "jsonwebtoken";
+import { UpdateUserInput } from "../graphql/generated/types";
 
 export class UserService extends BaseService {
   static async getAllUsers() {
@@ -28,23 +29,25 @@ export class UserService extends BaseService {
       .toArray();
   }
 
-  static async updateUser(
-    id: string,
-    firstName: string,
-    lastName: string,
-    email: string,
-    bio: string
-  ) {
-    const result = await this.db
-      ?.collection("users")
-      .updateOne(
-        { _id: new mongoose.Types.ObjectId(id) },
-        { $set: { firstName, lastName, email, bio } }
-      );
+  static async updateUser(input: UpdateUserInput) {
+    const result = await this.db?.collection("users").updateOne(
+      { _id: new mongoose.Types.ObjectId(input.id) },
+      {
+        $set: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          email: input.email,
+          bio: input.bio,
+        },
+      }
+    );
     return result?.modifiedCount === 1;
   }
 
   static async getUserByToken(token: string) {
+    if (!token) {
+      return null;
+    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
     if (!decoded.userId) throw new Error("Invalid token");
     return this.getUserById(decoded.userId);

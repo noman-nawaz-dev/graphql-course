@@ -1,4 +1,21 @@
-export const graphQLSchema = `
+import { gql } from "graphql-tag";
+export const graphQLSchema = gql`
+  directive @auth(roles: [UserRole!]) on FIELD_DEFINITION
+
+  input CreateCommentInput {
+    post: ID!
+    user: ID!
+    description: String!
+  }
+
+  input UpdateUserInput {
+    id: ID!
+    firstName: String
+    lastName: String
+    email: String
+    bio: String
+  }
+
   type User {
     _id: ID!
     firstName: String!
@@ -67,22 +84,20 @@ export const graphQLSchema = `
     Admin
     Guest
     Blogger
+    Unknown
   }
 
   type Query {
-    getAllUsers: [User]
-    getUser(id: ID!): User
+    getAllUsers: [User] @auth(roles: [Admin, Blogger])
+    getUser(id: ID!): User @auth(roles: [Guest])
     getAllPosts: [Post]
-    getPost(id: ID!): Post
+    getPost(id: ID!): Post @auth(roles: [Blogger])
     getCommentsByPostId(postId: ID!): [Comment]
     getUserToken(email: String!, password: String!): String!
   }
 
   type Mutation {
-    createComment(post: ID!, user: ID!, description: String!): Boolean!
-    updateUser(id: ID!, firstName: String, lastName: String,
-      email: String,
-      bio: String,
-    ): Boolean!
+    createComment(input: CreateCommentInput!): Boolean!
+    updateUser(input: UpdateUserInput!): Boolean!
   }
 `;

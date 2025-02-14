@@ -1,22 +1,11 @@
 import { UserService } from "../../../services/user.service";
+import { MutationResolvers, UpdateUserInput } from "../../generated/types";
 
 export class UserMutationResolver {
-  static async updateUser(
-    parent: any,
-    {
-      id,
-      firstName,
-      lastName,
-      email,
-      bio,
-    }: {
-      id: string;
-      firstName: string;
-      lastName: string;
-      email: string;
-      bio: string;
-    }
-  ) {
-    return UserService.updateUser(id, firstName, lastName, email, bio);
-  }
+  static updateUser: MutationResolvers["updateUser"] = async (
+    _,
+    { input }: { input: UpdateUserInput }
+  ) => {
+    return UserService.updateUser(input);
+  };
 }
