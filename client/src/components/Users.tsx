@@ -1,14 +1,34 @@
 import { useQuery } from "@apollo/client";
 import { GET_ALL_USERS } from "../graphql/query/user.query";
 import { User } from "../types/user.types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 const Users = () => {
+  const navigate = useNavigate();
   const { data, loading, error } = useQuery(GET_ALL_USERS);
-  if (error) return <div>Error: {error.message}</div>;
-  return loading ? (
-    <div>Loading...</div>
-  ) : (
+
+  useEffect(() => {
+    // Check if user is authenticated
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
+
+  if (error) {
+    // If error is about authentication/authorization, redirect to login
+    if (error.message.includes("role is required")) {
+      localStorage.removeItem("authToken"); // Clear invalid token
+      navigate("/login");
+      return null;
+    }
+    return <div>Error: {error.message}</div>;
+  }
+
+  if (loading) return <div>Loading...</div>;
+
+  return (
     <div>
       <h1>Users</h1>
       <table style={{ borderCollapse: "collapse", width: "100%" }}>

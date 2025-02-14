@@ -1,6 +1,14 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+  const isAuthenticated = !!localStorage.getItem("authToken");
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    navigate("/login");
+  };
+
   return (
     <nav
       style={{
@@ -32,6 +40,27 @@ const Header = () => {
           <Link to="/posts" style={{ textDecoration: "none", color: "#333" }}>
             Posts
           </Link>
+        </li>
+        <li>
+          {isAuthenticated ? (
+            <button
+              onClick={handleLogout}
+              style={{
+                background: "none",
+                border: "none",
+                color: "#333",
+                cursor: "pointer",
+                padding: 0,
+                font: "inherit",
+              }}
+            >
+              Logout
+            </button>
+          ) : (
+            <Link to="/login" style={{ textDecoration: "none", color: "#333" }}>
+              Login
+            </Link>
+          )}
         </li>
       </ul>
     </nav>

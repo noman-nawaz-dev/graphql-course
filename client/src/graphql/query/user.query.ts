@@ -82,3 +82,9 @@ export const GET_USER_BY_ID = gql`
     }
   }
 `;
+
+export const GET_USER_TOKEN = gql`
+  query GetUserToken($email: String!, $password: String!) {
+    getUserToken(email: $email, password: $password)
+  }
+`;
