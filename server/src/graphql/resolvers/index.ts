@@ -3,6 +3,7 @@ import { CommentQueryResolver } from "./query/comment-query.resolver";
 import { PostQueryResolver } from "./query/post-query.resolver";
 import { UserQueryResolver } from "./query/user-query.resolver";
 import { UserMutationResolver } from "./mutations/user-mutation.resolver";
+import { PostMutationResolver } from "./mutations/post-mutation.resolver";
 export const graphQLResolver = {
   Query: {
     getAllUsers: UserQueryResolver.getAllUsers,
@@ -16,6 +17,7 @@ export const graphQLResolver = {
   Mutation: {
     createComment: CommentMutationResolver.createComment,
     updateUser: UserMutationResolver.updateUser,
+    deletePost: PostMutationResolver.deletePost,
   },
   User: {
     viewedBy: UserQueryResolver.viewedBy,

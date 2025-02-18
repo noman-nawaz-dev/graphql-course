@@ -1,11 +1,15 @@
-interface Comment {
+export interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  profilePhoto: string;
+}
+
+export interface Comment {
+  _id: string;
   description: string;
   createdAt: string;
-  user: {
-    firstName: string;
-    lastName: string;
-    profilePhoto: string;
-  };
+  user: User;
 }
 
 export interface Post {
@@ -15,5 +19,9 @@ export interface Post {
   description: string;
   image: string;
   numViews: number;
+  likes: { _id: string }[];
+  disLikes: { _id: string }[];
+  user: User;
+  createdAt: string;
   comments: Comment[];
 }

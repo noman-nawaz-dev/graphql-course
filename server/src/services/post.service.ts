@@ -18,4 +18,13 @@ export class PostService extends BaseService {
       .find({ user: new mongoose.Types.ObjectId(userId) })
       .toArray();
   }
+
+  static async deletePost(id: string, userId: string): Promise<boolean> {
+    const result = await this.db?.collection("posts").deleteOne({
+      _id: new mongoose.Types.ObjectId(id),
+      user: new mongoose.Types.ObjectId(userId),
+    });
+    console.log(result);
+    return (result?.deletedCount ?? 0) > 0;
+  }
 }
