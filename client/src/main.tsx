@@ -16,6 +16,9 @@ import UserEdit from "./components/UserEdit.tsx";
 import Login from "./components/Login.tsx";
 import { setContext } from "@apollo/client/link/context";
 import ProtectedRoute from "./components/ProtectedRoute";
+import PostList from "./components/PostList";
+import PostDetails from "./components/PostDetails";
+import { UserProvider } from "./context/UserContext";
 
 const httpLink = createHttpLink({
   uri: import.meta.env.VITE_GRAPHQL_SERVER_URI,
@@ -38,40 +41,43 @@ const apolloClient = new ApolloClient({
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ApolloProvider client={apolloClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route index element={<Home />} />
-            <Route
-              path="users"
-              element={
-                <ProtectedRoute>
-                  <Users />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="users/:id"
-              element={
-                <ProtectedRoute>
-                  <UserDetails />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="users/:id/edit"
-              element={
-                <ProtectedRoute>
-                  <UserEdit />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="posts" element={<div>Posts Page (Coming Soon)</div>} />
-            <Route path="login" element={<Login />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </ApolloProvider>
+    <UserProvider>
+      <ApolloProvider client={apolloClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route index element={<Home />} />
+              <Route
+                path="users"
+                element={
+                  <ProtectedRoute>
+                    <Users />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="users/:id"
+                element={
+                  <ProtectedRoute>
+                    <UserDetails />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="users/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <UserEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="posts" element={<PostList />} />
+              <Route path="posts/:id" element={<PostDetails />} />
+              <Route path="login" element={<Login />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </ApolloProvider>
+    </UserProvider>
   </StrictMode>
 );

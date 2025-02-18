@@ -2,19 +2,27 @@ import { useState } from "react";
 import { useLazyQuery } from "@apollo/client";
 import { useNavigate } from "react-router-dom";
 import { GET_USER_TOKEN } from "../graphql/query/user.query";
+import { useUser } from "../hooks/useUser";
+import { getUserIdFromToken } from "../utils/auth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const [getUserToken, { loading }] = useLazyQuery(GET_USER_TOKEN, {
     onCompleted: (data) => {
       const token = data.getUserToken;
       if (token) {
         localStorage.setItem("authToken", token);
-        // Force a reload to ensure Apollo Client picks up the new token
+        const userId = getUserIdFromToken();
+        // Fetch user details and set user context
+        const user = {
+          _id: userId,
+        }; // Replace with actual user data
+        setUser(user);
         navigate("/users");
       } else {
         setError("Invalid credentials");

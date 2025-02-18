@@ -89,9 +89,9 @@ export const graphQLSchema = gql`
 
   type Query {
     getAllUsers: [User] @auth(roles: [Admin, Blogger])
-    getUser(id: ID!): User @auth(roles: [Guest])
+    getUser(id: ID!): User @auth(roles: [Guest, Admin])
     getAllPosts: [Post]
-    getPost(id: ID!): Post @auth(roles: [Blogger])
+    getPost(id: ID!): Post @auth(roles: [Unknown, Admin, Guest, Blogger])
     getCommentsByPostId(postId: ID!): [Comment]
     getUserToken(email: String!, password: String!): String!
   }
@@ -99,5 +99,6 @@ export const graphQLSchema = gql`
   type Mutation {
     createComment(input: CreateCommentInput!): Boolean!
     updateUser(input: UpdateUserInput!): Boolean!
+    deletePost(id: ID!): Boolean
   }
 `;
