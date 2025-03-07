@@ -87,6 +87,17 @@ export const graphQLSchema = gql`
     Unknown
   }
 
+  type CommentNotification {
+    description: String!
+    user: CommentUser!
+    postId: ID!
+  }
+
+  type CommentUser {
+    firstName: String!
+    lastName: String!
+  }
+
   type Query {
     getAllUsers: [User] @auth(roles: [Admin, Blogger])
     getUser(id: ID!): User @auth(roles: [Guest, Admin])
@@ -100,5 +111,9 @@ export const graphQLSchema = gql`
     createComment(input: CreateCommentInput!): Boolean!
     updateUser(input: UpdateUserInput!): Boolean!
     deletePost(id: ID!): Boolean
+  }
+
+  type Subscription {
+    commentCreated: CommentNotification!
   }
 `;

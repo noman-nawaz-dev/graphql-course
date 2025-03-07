@@ -4,6 +4,8 @@ import { PostQueryResolver } from "./query/post-query.resolver";
 import { UserQueryResolver } from "./query/user-query.resolver";
 import { UserMutationResolver } from "./mutations/user-mutation.resolver";
 import { PostMutationResolver } from "./mutations/post-mutation.resolver";
+import { pubsub } from "../pubsub/pubsub"; // Adjust the path as necessary
+
 export const graphQLResolver = {
   Query: {
     getAllUsers: UserQueryResolver.getAllUsers,
@@ -18,6 +20,11 @@ export const graphQLResolver = {
     createComment: CommentMutationResolver.createComment,
     updateUser: UserMutationResolver.updateUser,
     deletePost: PostMutationResolver.deletePost,
+  },
+  Subscription: {
+    commentCreated: {
+      subscribe: () => pubsub.asyncIterableIterator(["COMMENT_CREATED"]),
+    },
   },
   User: {
     viewedBy: UserQueryResolver.viewedBy,

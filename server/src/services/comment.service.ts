@@ -26,4 +26,26 @@ export class CommentService extends BaseService {
       return false;
     }
   }
+
+  static async getCommentNotificationData(
+    input: CreateCommentInput
+  ): Promise<any> {
+    try {
+      // Get user info for the notification
+      const user = await UserService.getUserById(input.user);
+
+      // Return simple notification data
+      return {
+        description: input.description,
+        user: {
+          firstName: user?.firstName,
+          lastName: user?.lastName,
+        },
+        postId: input.post,
+      };
+    } catch (error) {
+      console.error("Error creating comment notification data:", error);
+      return null;
+    }
+  }
 }

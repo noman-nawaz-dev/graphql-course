@@ -1,9 +1,12 @@
 import dotenv from "dotenv";
 import { DatabaseManager } from "./database/DatabaseManager";
-import { connectGraphQL, graphQLContext } from "./graphql/graphql";
 import { expressMiddleware } from "@apollo/server/express4";
 import express from "express";
 import cors from "cors";
+import { createServer } from "http";
+import { connectToGraphQL } from "./graphql/graphql";
+import { graphQLContext } from "./graphql/graphql";
+
 dotenv.config({ path: ".env" });
 
 export const envMode = process.env.NODE_ENV?.trim() || "DEVELOPMENT";
@@ -12,24 +15,29 @@ const mongoURI = process.env.MONGO_URI!;
 
 DatabaseManager.getInstance().connect(mongoURI);
 
-const graphQLServer = connectGraphQL();
-await graphQLServer.start();
-
 const app = express();
+const httpServer = createServer(app);
 
-app.use(express.json());
-app.use(cors());
-app.use(
-  "/graphql",
-  expressMiddleware(graphQLServer, {
-    context: graphQLContext,
-  })
-);
+async function startServer() {
+  const server = await connectToGraphQL(httpServer);
+  await server.start();
+  app.use(express.json());
+  app.use(cors());
+  app.use(
+    "/graphql",
+    expressMiddleware(server, {
+      context: graphQLContext,
+    })
+  );
 
-app.get("/", (req, res) => {
-  res.send("Hello World");
-});
+  httpServer.listen(port, () => {
+    console.log(`HTTP Server running on: http://localhost:${port}`);
+    console.log(
+      `WebSocket Server running on: ws://localhost:${port}/subscriptions`
+    );
+  });
+}
 
-app.listen(port, () => {
-  console.log(`Server is running on: http://localhost:${port}`);
+startServer().catch((error) => {
+  console.error("Failed to start server:", error);
 });
