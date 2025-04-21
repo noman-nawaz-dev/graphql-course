@@ -1,0 +1,43 @@
+service: serverless-graphql-api
+frameworkVersion: "4"
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: us-east-1
+  httpApi:
+    cors:
+      allowedOrigins:
+        - "*"
+      allowedHeaders:
+        - "Content-Type"
+        - "Authorization"
+      allowedMethods:
+        - "GET"
+        - "POST"
+  environment:
+    NODE_ENV: production
+    MONGO_URI: ${ssm:/serverless-framework/deployment/mongo-uri}
+
+functions:
+  graphql:
+    handler: dist/app.handler
+    events:
+      - httpApi:
+          path: /graphql
+          method: POST
+      - httpApi:
+          path: /graphql
+          method: GET
+
+plugins:
+  - serverless-offline
+
+custom:
+  serverless-offline:
+    httpPort: 8000
+
+package:
+  patterns:
+    - "!**"
+    - "dist/**"

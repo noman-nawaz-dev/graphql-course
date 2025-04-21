@@ -4,7 +4,7 @@ import { PostQueryResolver } from "./query/post-query.resolver";
 import { UserQueryResolver } from "./query/user-query.resolver";
 import { UserMutationResolver } from "./mutations/user-mutation.resolver";
 import { PostMutationResolver } from "./mutations/post-mutation.resolver";
-import { pubsub } from "../pubsub/pubsub"; // Adjust the path as necessary
+import { CommentSubscriptionResolver } from "./subscriptions/comment-subscription.resolver";
 
 export const graphQLResolver = {
   Query: {
@@ -22,9 +22,7 @@ export const graphQLResolver = {
     deletePost: PostMutationResolver.deletePost,
   },
   Subscription: {
-    commentCreated: {
-      subscribe: () => pubsub.asyncIterableIterator(["COMMENT_CREATED"]),
-    },
+    commentCreated: CommentSubscriptionResolver.commentCreated,
   },
   User: {
     viewedBy: UserQueryResolver.viewedBy,

@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export class DatabaseManager {
   private static instance: DatabaseManager;
-  private isConnected: boolean = false;
+  public isConnected: boolean = false;
 
   private constructor() {}
 

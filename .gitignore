@@ -12,6 +12,8 @@ build/
 tests
 **/tests
 
+**/.serverless
+
 # Environment variables
 .env
 .env.local
